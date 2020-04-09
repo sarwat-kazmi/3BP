@@ -29,4 +29,5 @@ class Graphs:
         
     def cutbacks(self, habit):
         """  Provides a visual representation of how much money the user 
-        would save by cutting back on specific spending habits."
+        would save by cutting back on specific spending habits.
+        """
