@@ -13,11 +13,20 @@ class Calculation:
     function 4 # Laraib:
         sdf
 
-Class Graphs:
-    """ Docstring for class goes here """
+class Graphs:
+    """  A visual representation of user spending
     
-    function 5 # Miguel:
-        sdf
+    Attributes:
+        earnings (float):  monthly income
+        expenses (float):  monthly outflow
+    """
     
-    function 6 # Miguel:
-        sdf
+    def __init__(self, earnings, expenses):
+    
+    def biggest_expenses(self, expenses):
+        """ Provides a visual representation of the users largest expenses
+        """
+        
+    def cutbacks(self, habit):
+        """  Provides a visual representation of how much money the user 
+        would save by cutting back on specific spending habits."
