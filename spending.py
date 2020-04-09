@@ -16,18 +16,18 @@ class Calculation:
 class Graphs:
     """  A visual representation of user spending
     
-    Attributes:
-        earnings (float):  monthly income
-        expenses (float):  monthly outflow
+    Args:
+        earnings (dict):  dictionary of monthly income
+        expenses (dict):  dictionary of monthly outflow
     """
     
     def __init__(self, earnings, expenses):
-    
-    def biggest_expenses(self, expenses):
+
+    def biggest_expenses(self):
         """ Provides a visual representation of the users largest expenses
         """
         
-    def cutbacks(self, habit):
+    def cutbacks(self):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
         """
