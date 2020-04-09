@@ -1,3 +1,5 @@
 print("Hello World!")
 
-import random
+import random 
+
+print ("hello")
