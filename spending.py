@@ -35,9 +35,8 @@ class Calculation:
         
         """
     
-    def interest(self, principle_amt, interest_rate, duration): # Laraib:
-        """Calculates the amount of interest that will be accumulated on loans
-        as well as remaining balance.
+    def interest(self, principle_amt, interest_rate, duration): 
+        """Calculates the amount of interest that will be accumulated on loans.
         
         Args:
             principle_amt(float): the principle amount of the loan
@@ -54,15 +53,13 @@ class Calculation:
         # if compound interest
         #interest_due = principle_amt * ((1 + interest_rate/100)**duration)
     
-    def spending_allocation(self): # Laraib:
-        """Calculates the percentages of income that goes towards everyday 
-        expenses (recreation, groceries, dining, etc).
+    def spending_allocation(self, var_expenses): 
+        """Calculates the percentages of income that goes towards variable 
+        expenses (groceries, recreation, etc).
         
         Args:
-            total_income(float): total earnings
-            rec_spending(float): the amount spent on recreational activities
-            grocery_spending(float): the amount spent on groceries
-        
+            var_expenses(float): total variable expenses
+            
         Returns:
             (float): the percentage of income going towards each category.
         """
