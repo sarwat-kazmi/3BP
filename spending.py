@@ -7,11 +7,10 @@ class Calculation:
     """
     
     def __init__(self, total_income, total_expenses):
-        self.total_income = total_income
-        self.total_expenses = total_expenses
-    
+
     def user_expenses(self, fixed_expenses, var_expenses):
-        """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) and variable expenses (i.e. coffee, gas, etc.).
+        """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
+        and variable expenses (i.e. coffee, gas, etc.).
         
         Args:
             fixed_expenses (float): sum of user fixed expenses
@@ -36,7 +35,7 @@ class Calculation:
         
         """
     
-    def interest(): # Laraib:
+    def interest(self, principle_amt, interest_rate, duration): # Laraib:
         """Calculates the amount of interest that will be accumulated on loans
         as well as remaining balance.
         
@@ -55,7 +54,7 @@ class Calculation:
         # if compound interest
         #interest_due = principle_amt * ((1 + interest_rate/100)**duration)
     
-    def spending_allocation(): # Laraib:
+    def spending_allocation(self): # Laraib:
         """Calculates the percentages of income that goes towards everyday 
         expenses (recreation, groceries, dining, etc).
         
