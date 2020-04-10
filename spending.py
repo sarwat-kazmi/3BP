@@ -1,9 +1,9 @@
 class Calculation:
     """ Calculating various components of and building a user's financial profile.
     
-    total_income (float): total income user makes
-    total_expenses (float): total of expenses user spends on
-            
+    Attributes:
+        total_income (float): total income user makes
+        total_expenses (float): total of expenses user spends on        
     """
     
     def __init__(self, total_income, total_expenses):
@@ -22,15 +22,17 @@ class Calculation:
         
         """
     
-    def spend_check(self):
-        """ Calculates whether user is overspending by checking whether their variable expenses surpass their fixed expenses.
+    def spend_check(self, fixed_spend, var_spend):
+        """ Calculates whether user is overspending by checking whether their 
+        variable expenses surpass their fixed expenses.
         
         Args:
             fixed_spend (float): amount of fixed expenses
             var_spend (float): amount of variable expenses
         
         Returns:
-            break_even (float): check point to see how expenditures and earnings compare
+            break_even (float): check point to see how expenditures 
+            and earnings compare
         
         """
     
@@ -67,20 +69,30 @@ class Calculation:
         """
 
 class Graphs:
-    """  A visual representation of user spending
+      """  A visual representation of user spending
     
-    Args:
-        earnings (dict):  dictionary of monthly income
-        expenses (dict):  dictionary of monthly outflow
+    Attributes:
+        earnings (dict):  dictionary of yearly income
+        expenses (dict):  dictionary of yearly outflow 
     """
     
     def __init__(self, earnings, expenses):
 
     def biggest_expenses(self):
         """ Provides a visual representation of the users largest expenses
+        
+        Returns:
+            bar plot of largest expenses from expenses dictionary
         """
         
-    def cutbacks(self):
+    def cutbacks(self, habits):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
+        
+        Args:
+            habits (dict):  a dictionary of habits that could be cut to save 
+            money, monthly spending
+            
+        Returns:
+            pie chart of money saved  
         """
