@@ -3,7 +3,10 @@ class Calculation:
     
     Attributes:
         total_income (float): total income user makes
-        total_expenses (float): total of expenses user spends on        
+        total_expenses (float): total of expenses user spends on
+            
+    Returns:
+        CSV file       
     """
     
     def __init__(self, total_income, total_expenses):
@@ -69,7 +72,10 @@ class Graphs:
     
     Attributes:
         earnings (dict):  dictionary of yearly income
-        expenses (dict):  dictionary of yearly outflow 
+        expenses (dict):  dictionary of yearly outflow
+    
+    Returns:
+        pie chart, bar plot
     """
     
     def __init__(self, earnings, expenses):
