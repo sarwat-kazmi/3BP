@@ -10,7 +10,7 @@ class Calculation:
         self.total_income = total_income
         self.total_expenses = total_expenses
     
-    def user_expenses(self):
+    def user_expenses(self, fixed_expenses, var_expenses):
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) and variable expenses (i.e. coffee, gas, etc.).
         
         Args:
