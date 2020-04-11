@@ -3,7 +3,7 @@ from spending import Calculation, Graphs
 
 class TestSkills(unittest.TestCase):
     
-     def setUp(self):
+    def setUp(self):
         self.calculation1 = Calculation(40000.00, 10000.00)
         self.calculation2 = Calculation(98000.00, 33000.00)
         self.graph1 = Graphs({"maitre'd": 19200.00, "delivery driver": 24000.00}, {"cellphone": 1200.00, "gas bill": 720.00})
@@ -18,12 +18,11 @@ class TestSkills(unittest.TestCase):
         self.graph3 = Graphs({"high school teacher": 35000.00}, {"pepco bill":720.00})
         self.assertEqual(self.calculation1.total_income, 40000.00)
         self.assertEqual(self.calculation1.total_expenses, 10000.00)
-        self.assertEqual(self.graph3.earnings, {"high school teacher": 35000.00, {"pepco bill": 720.00})
+        self.assertEqual(self.graph3.earnings, {"high school teacher": 35000.00}, {"pepco bill": 720.00})
     
     def test_habits(self):
         dict1 = {"smoking": 64.00, "eating out for lunch": 200.00}
-        self.assertEqual(self.graph1.cutbacks(dict1), {"smoking": 64.00, 
-        "eating out for lunch": 200.00}) 
+        self.assertEqual(self.graph1.cutbacks(dict1), {"smoking": 64.00, "eating out for lunch": 200.00}) 
     
-    if __name__ == '__main__':
-        unittest.main()
+if __name__ == '__main__':
+    unittest.main()
