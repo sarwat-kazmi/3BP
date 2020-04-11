@@ -1,3 +1,5 @@
+""" classes for calculation and visual display """
+
 class Calculation:
     """ Calculating various components of and building a user's financial profile.
     
