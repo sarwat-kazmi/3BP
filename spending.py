@@ -90,10 +90,10 @@ class Calculation:
             (float): the total amount of interest due at the end of the
             loan period.
         """
-        if int_type = "simple": 
+        if int_type == "simple": 
             interest_due = (principle_amt * interest_rate * duration) / 100 
         
-        if int_type = "compound":
+        if int_type == "compound":
             interest_due = principle_amt * ((1 + interest_rate/100)**duration)
     
     def spending_allocation(self, var_expenses): 
