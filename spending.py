@@ -40,23 +40,24 @@ class Calculation:
         
         """
     
-    def interest(self, principle_amt, interest_rate, duration): 
+    def interest(self, principle_amt, interest_rate, duration, int_type = "simple"): 
         """Calculates the amount of interest that will be accumulated on loans.
         
         Args:
             principle_amt(float): the principle amount of the loan
             interest_rate(float): the interest rate on the loan
             duration(int): the time in years of the loan
+            int_type(str): simple or compound interest
         
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
         """
-        # if simple interest
-        #interest_due = (principle_amt * interest_rate * duration) / 100 
+        if int_type = "simple": 
+            interest_due = (principle_amt * interest_rate * duration) / 100 
         
-        # if compound interest
-        #interest_due = principle_amt * ((1 + interest_rate/100)**duration)
+        if int_type = "compound":
+            interest_due = principle_amt * ((1 + interest_rate/100)**duration)
     
     def spending_allocation(self, var_expenses): 
         """Calculates the percentages of income that goes towards variable 
@@ -68,6 +69,8 @@ class Calculation:
         Returns:
             (float): the percentage of income going towards each category.
         """
+        pctg = (var_expenses/total_income)
+        return("Percentage of income going toward variable expenses: {:.2%}".format(pctg))
 
 class Graphs:
       """  A visual representation of user spending
