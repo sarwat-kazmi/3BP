@@ -18,8 +18,6 @@ class Calculation:
     """
     
     def __init__(self, total_income, total_expenses):
-        self.total_income = int(input("Enter total income: "))
-        self.total_expenses = total_expenses
 
     def user_expenses(self, fixed_expenses, var_expenses):
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
@@ -31,6 +29,7 @@ class Calculation:
         
         Returns:
             Dictionaries of user's financial profile
+        
         """
         
         # # # dictionaries for expenses
@@ -42,7 +41,7 @@ class Calculation:
         expenses = True
         
         while expenses:
-            # type of expense (i.e. gym, food, loans)
+            # type of expense (i.e. gym, food)
             type = input("What type of expense was it?")
             # how much they spent
             cost = int(input("How much did you spend?"))
@@ -59,12 +58,9 @@ class Calculation:
         # creating csv column headers
         csv_col = ['Fixed or Variable', 'Expense Type', 'Expense Cost']
         
-        # writing the dictionaries to csv
         with open('expenses.csv', 'w', newLine='') as f:
             write = csv.DictWriter(f, filenames = csv_col)
             write.writeheader()
-            for data in fixed_expenses and var_expenses:
-                write.writerow(data)
     
     def spend_check(self, fixed_spend, var_spend):
         """ Calculates whether user is overspending by checking whether their 
@@ -77,8 +73,9 @@ class Calculation:
         Returns:
             break_even (float): check point to see how expenditures 
             and earnings compare
+        
         """
-
+        
         
     
     def interest(self, principle_amt, interest_rate, duration, int_type = "simple"): 
@@ -134,15 +131,35 @@ class Graphs:
         Returns:
             bar plot of largest expenses from expenses dictionary
         """
+        print('balls')
         
-    def cutbacks(self, habits):
+        
+    def cutbacks(self):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
         
         Args:
-            habits (dict):  a dictionary of habits that could be cut to save 
+            habits (str):  a dictionary of habits that could be cut to save 
             money, monthly spending
             
         Returns:
             pie chart of money saved  
         """
+        while True:
+            habit = input(str("Enter name of habit (one word)"))    
+            cost = input(float("How much do you spend monthly to supplement this"
+                             "habit? (enter dollars and decimals)"))
+            if habit == "done":
+                break
+            
+        habits = {}
+        habits[habit] = cost
+        
+        print(habits)
+        
+x = Graphs({'job':40000.00, 'online sales':10000.00}, {'gas':960, 'phone':1200})
+print(x.cutbacks())
+
+
+        
+        
