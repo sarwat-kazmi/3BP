@@ -138,22 +138,21 @@ class Graphs:
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
         
-        Args:
-            habits (str):  a dictionary of habits that could be cut to save 
-            money, monthly spending
-            
         Returns:
             pie chart of money saved  
         """
+        
+        habits = {}
+        
         while True:
             habit = input(str("Enter name of habit (one word)"))    
             cost = input(float("How much do you spend monthly to supplement this"
                              "habit? (enter dollars and decimals)"))
+            
+            habits[habit] = cost
+            
             if habit == "done":
                 break
-            
-        habits = {}
-        habits[habit] = cost
         
         print(habits)
         
