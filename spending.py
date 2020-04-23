@@ -1,3 +1,9 @@
+import pandas as pd
+import numpy as np
+import madplotlib
+import csv
+
+
 """ classes for calculation and visual display """
 
 class Calculation:
@@ -18,13 +24,37 @@ class Calculation:
         and variable expenses (i.e. coffee, gas, etc.).
         
         Args:
-            fixed_expenses (float): sum of user fixed expenses
-            var_expenses (float): sum of user variable expenses
+            fixed_expenses (dict): dictionary of user's fixed expenses
+            var_expenses (dict): dictionary of user's variable expenses
         
         Returns:
             CSV of user's financial profile
         
         """
+        
+        # # # dictionaries for expenses
+        fixed_expenses = {}
+        #"rent": 1000, "tuition": 5000, "car insurance": 200, "student loans": 500, "gym": 90
+        var_expenses = {}
+        # "gifts": 150, "clothing": 400, "gas": 100, "groceries": 200, "parking": 85
+        
+        expenses = True
+        
+        while expenses:
+            # type of expense (i.e. gym, food)
+            type = input("What type of expense was it?")
+            # how much they spent
+            cost = int(input("How much did you spend?"))
+            
+            # asking which expense to append to respective dictionary
+            exp = input("Which expense did you spend on?")
+            if exp == "fixed":
+                fixed_expenses[type] = cost
+            elif exp == "variable":
+                var_expenses[type] = cost
+            else:
+                break
+            
     
     def spend_check(self, fixed_spend, var_spend):
         """ Calculates whether user is overspending by checking whether their 
@@ -84,6 +114,8 @@ class Graphs:
     """
     
     def __init__(self, earnings, expenses):
+        self.earnings = {}
+        self.expenses = {}
 
     def biggest_expenses(self):
         """ Provides a visual representation of the users largest expenses
