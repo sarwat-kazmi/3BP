@@ -28,7 +28,7 @@ class Calculation:
             var_expenses (dict): dictionary of user's variable expenses
         
         Returns:
-            CSV of user's financial profile
+            Dictionaries of user's financial profile
         
         """
         
@@ -55,6 +55,11 @@ class Calculation:
             else:
                 break
             
+        # creating csv column headers
+        csv_col = ['Fixed or Variable', 'Expense Type', 'Expense Cost']
+        
+        with open('expenses.csv', 'w', newLine='') as f:
+            
     
     def spend_check(self, fixed_spend, var_spend):
         """ Calculates whether user is overspending by checking whether their 
@@ -69,6 +74,8 @@ class Calculation:
             and earnings compare
         
         """
+        
+        
     
     def interest(self, principle_amt, interest_rate, duration): 
         """Calculates the amount of interest that will be accumulated on loans.
