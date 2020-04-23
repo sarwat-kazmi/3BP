@@ -1,3 +1,8 @@
+import pandas as pd
+import numpy as np
+import madplotlib
+
+
 """ classes for calculation and visual display """
 
 class Calculation:
@@ -81,6 +86,8 @@ class Graphs:
     """
     
     def __init__(self, earnings, expenses):
+        self.earnings = {}
+        self.expenses = {}
 
     def biggest_expenses(self):
         """ Provides a visual representation of the users largest expenses
