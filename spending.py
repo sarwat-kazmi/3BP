@@ -59,7 +59,8 @@ class Calculation:
         csv_col = ['Fixed or Variable', 'Expense Type', 'Expense Cost']
         
         with open('expenses.csv', 'w', newLine='') as f:
-            
+            write = csv.DictWriter(f, filenames = csv_col)
+            write.writeheader()
     
     def spend_check(self, fixed_spend, var_spend):
         """ Calculates whether user is overspending by checking whether their 
