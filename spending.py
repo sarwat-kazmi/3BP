@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import madplotlib
+import matplotlib
 import csv
 
 
@@ -139,7 +139,10 @@ class Graphs:
         Returns:
             bar plot of largest expenses from expenses dictionary
         """
-        print('balls')
+        
+        
+        for exp in self.expenses.items():
+            
         
         
     def cutbacks(self):
@@ -155,18 +158,19 @@ class Graphs:
         while True:
             habit = input(str("Enter name of habit (one word)"))    
             cost = input(float("How much do you spend monthly to supplement this"
-                             "habit? (enter dollars and decimals)"))
+                             "habit? (enter dollars and cents)"))
             
             habits[habit] = cost
             
             if habit == "done":
                 break
         
-        print(habits)
+        costs = {}
+        total = 0
         
-x = Graphs({'job':40000.00, 'online sales':10000.00}, {'gas':960, 'phone':1200})
-print(x.cutbacks())
-
-
+        for k, v in dict.items():
+            total += v*12
         
+        costs['habits'] = total
         
+        print('You could be saving ' + str(costs['habits']) + ' dollar(s) every year')
