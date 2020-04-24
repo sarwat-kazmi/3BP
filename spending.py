@@ -12,6 +12,8 @@ class Calculation:
     Attributes:
         total_income (float): total income user makes
         total_expenses (float): total of expenses user spends on
+        fixed_expenses (float):  total number for fixed expenses
+        var_expenses (float):  total number for variable expenses
             
     Returns:
         CSV file       
