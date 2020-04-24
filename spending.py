@@ -90,14 +90,7 @@ class Calculation:
             
     def interest(self): 
         """Calculates the amount of interest that will be accumulated on loans.
-        
-        Args:
-            principle_amt(float): the principle amount of the loan
-            interest_rate(float): the interest rate on the loan
-            duration(int): the time in years of the loan
-            int_type(str): simple or compound interest
-            loan(str): the type of loan (student, car, etc)
-        
+       
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
