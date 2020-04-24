@@ -96,7 +96,7 @@ class Calculation:
             interest_rate(float): the interest rate on the loan
             duration(int): the time in years of the loan
             int_type(str): simple or compound interest
-            loan(str): the type of loan (student, etc)
+            loan(str): the type of loan (student, car, etc)
         
         Returns:
             (float): the total amount of interest due at the end of the
@@ -116,6 +116,17 @@ class Calculation:
         else:
             interest_due = principle_amt * ((1 + interest_rate/100)**duration)
             print(interest_due)
+            
+    #repeat()
+    
+    #def repeat(): potential function to repeat interest() calculations for a diff loan
+        #repeat = input("Would you like to get the total interest due for another loan? enter yes or no: ")
+        #if repeat.lower() == "yes":
+            #interest()
+        #elif repeat.lower() == "no":
+            #print("Your interest amounts have been calculated.")
+        #else:
+            #repeat()
     
     def spending_allocation(self, var_expenses): 
         """Calculates the percentages of income that goes towards variable 
