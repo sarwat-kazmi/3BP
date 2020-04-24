@@ -17,7 +17,9 @@ class Calculation:
         CSV file       
     """
     
-    def __init__(self, total_income, total_expenses):
+    def __init__(self, total_income, total_expenses, fixed_expenses, var_expenses):
+        self.fixed_expenses = fixed_expenses
+        self.var_expenses = var_expenses
 
     def user_expenses(self, fixed_expenses, var_expenses):
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
@@ -77,6 +79,8 @@ class Calculation:
         """
         
         while True:
+            fixed_spend = sum(fixed_expenses.values())
+            var_spend = sum(var_expenses.values())
             total_income = float(input("Enter total income here: "))
             total_spend = fixed_spend + var_spend
             if total_spend > total_income:
