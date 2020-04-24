@@ -18,6 +18,8 @@ class Calculation:
     """
     
     def __init__(self, total_income, total_expenses, fixed_expenses, var_expenses):
+        self.total_income = total_income
+        self.total_expenses = total_expenses
         self.fixed_expenses = fixed_expenses
         self.var_expenses = var_expenses
 
@@ -34,35 +36,44 @@ class Calculation:
         
         """
         
-        # # # dictionaries for expenses
+        # dictionaries for expenses
+        
         fixed_expenses = {}
-        #"rent": 1000, "tuition": 5000, "car insurance": 200, "student loans": 500, "gym": 90
+        # ex. "rent": 1000.00, "tuition": 5000.00, "car insurance": 200.00, 
+        # "student loans": 500.00, "gym": 90.00
+        
         var_expenses = {}
-        # "gifts": 150, "clothing": 400, "gas": 100, "groceries": 200, "parking": 85
+        # ex. "gifts": 150.00, "clothing": 400.00, "gas": 100.00, 
+        # "groceries": 200.00, "parking": 85.00
         
-        expenses = True
-        
-        while expenses:
-            # type of expense (i.e. gym, food)
-            type = input("What type of expense was it?")
-            # how much they spent
-            cost = float(input("How much did you spend?"))
+        while True:
             
-            # asking which expense to append to respective dictionary
-            exp = input("Which expense did you spend on?")
-            if exp == "fixed":
-                fixed_expenses[type] = cost
-            elif exp == "variable":
-                var_expenses[type] = cost
-            else:
+            # FIXED EXPENSES
+            
+            # name of expense (i.e. rent, tuition)
+            fixed = input(str("FIXED expenses, name? "))
+            if fixed == "done":
                 break
+            # how much they spent (i.e. 500.00)
+            cost = input("How much?  (dollars and cents) ")
+
+            fixed_expenses[fixed] = cost
             
-        # creating csv column headers
-        csv_col = ['Fixed or Variable', 'Expense Type', 'Expense Cost']
-        
-        with open('expenses.csv', 'w', newLine='') as f:
-            write = csv.DictWriter(f, filenames = csv_col)
-            write.writeheader()
+        while True:
+            
+            # VARIABLE EXPENSES
+            
+            var = input(str("VARIABLE expenses, name? "))
+            if var == "done":
+                break
+            cost = input("How much?  (dollars and cents) ")
+            
+            var_expenses[var] = cost
+
+        with open('user_expenses.csv', 'w', newline='') as csvfile:
+            csv_col = ['Expense Type', 'Expense Cost']
+            writer = csv.DictWriter(csvfile, fieldnames=csv_col)
+            writer.writeheader()
     
     def spend_check(self, fixed_spend, var_spend):
         """ Calculates whether user is overspending by checking whether their 
