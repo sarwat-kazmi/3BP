@@ -44,7 +44,7 @@ class Calculation:
             # type of expense (i.e. gym, food)
             type = input("What type of expense was it?")
             # how much they spent
-            cost = int(input("How much did you spend?"))
+            cost = float(input("How much did you spend?"))
             
             # asking which expense to append to respective dictionary
             exp = input("Which expense did you spend on?")
@@ -71,11 +71,19 @@ class Calculation:
             var_spend (float): amount of variable expenses
         
         Returns:
-            break_even (float): check point to see how expenditures 
+            total_spend (float): check point to see how expenditures 
             and earnings compare
         
         """
         
+        while True:
+            total_income = float(input("Enter total income here: "))
+            total_spend = fixed_spend + var_spend
+            if total_spend > total_income:
+                print("You have gone over budget.")
+            else:
+                print("You are within budget.")
+            
         
     
     def interest(self, principle_amt, interest_rate, duration, int_type = "simple"): 
