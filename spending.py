@@ -88,7 +88,7 @@ class Calculation:
             else:
                 print("You are within budget.")
             
-    def interest(self, principle_amt, interest_rate, duration, int_type, loan): 
+    def interest(self): 
         """Calculates the amount of interest that will be accumulated on loans.
         
         Args:
