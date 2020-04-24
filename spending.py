@@ -100,7 +100,7 @@ class Calculation:
         """
         
         while True: 
-            loan = input("Enter what the loan is for: ")
+            loan = str(input("Enter what the loan is for: "))
             principle_amt = float(input("Enter the principle amount of the loan: "))
             interest_rate = float(input("Enter the interest rate on the loan: "))
             duration = int(input("Enter the full duration of the loan: "))
