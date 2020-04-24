@@ -103,22 +103,19 @@ class Calculation:
             loan period.
         """
         
-        while True: 
-            loan = str(input("Enter what the loan is for: "))
-            principle_amt = float(input("Enter the principle amount of the loan: "))
-            interest_rate = float(input("Enter the interest rate on the loan: "))
-            duration = int(input("Enter the full duration of the loan: "))
-            int_type = str(input("Enter if simple or compound: "))
-            if input("Would you like to get the total interest due for another loan? yes/no: ") == "no":
-                break
-
-            if int_type == "simple": 
-                interest_due = (principle_amt * interest_rate * duration) / 100
-                return interest_due 
+        loan = str(input("Enter what the loan is for: "))
+        principle_amt = float(input("Enter the principle amount of the loan: "))
+        interest_rate = float(input("Enter the interest rate on the loan: "))
+        duration = int(input("Enter the full duration of the loan: "))
+        int_type = str(input("Enter if 'simple' or 'compound': "))
         
-            elif int_type == "compound":
-                interest_due = principle_amt * ((1 + interest_rate/100)**duration)
-                return interest_due
+        if int_type.lower() == "simple": 
+            interest_due = (principle_amt * interest_rate * duration) / 100
+            print(interest_due)
+        
+        else:
+            interest_due = principle_amt * ((1 + interest_rate/100)**duration)
+            print(interest_due)
     
     def spending_allocation(self, var_expenses): 
         """Calculates the percentages of income that goes towards variable 
