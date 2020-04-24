@@ -84,9 +84,7 @@ class Calculation:
             else:
                 print("You are within budget.")
             
-        
-    
-    def interest(self, principle_amt, interest_rate, duration, int_type = "simple"): 
+    def interest(self, principle_amt, interest_rate, duration, int_type, loan): 
         """Calculates the amount of interest that will be accumulated on loans.
         
         Args:
@@ -94,16 +92,29 @@ class Calculation:
             interest_rate(float): the interest rate on the loan
             duration(int): the time in years of the loan
             int_type(str): simple or compound interest
+            loan(str): the type of loan (student, etc)
         
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
         """
-        if int_type == "simple": 
-            interest_due = (principle_amt * interest_rate * duration) / 100 
         
-        if int_type == "compound":
-            interest_due = principle_amt * ((1 + interest_rate/100)**duration)
+        while True: 
+            loan = input("Enter what the loan is for: ")
+            principle_amt = float(input("Enter the principle amount of the loan: "))
+            interest_rate = float(input("Enter the interest rate on the loan: "))
+            duration = int(input("Enter the full duration of the loan: "))
+            int_type = str(input("Enter if simple or compound: "))
+            if input("Would you like to get the total interest due for another loan? yes/no: ") == "no":
+                break
+
+            if int_type == "simple": 
+                interest_due = (principle_amt * interest_rate * duration) / 100
+                return interest_due 
+        
+            elif int_type == "compound":
+                interest_due = principle_amt * ((1 + interest_rate/100)**duration)
+                return interest_due
     
     def spending_allocation(self, var_expenses): 
         """Calculates the percentages of income that goes towards variable 
