@@ -134,18 +134,20 @@ class Calculation:
         #else:
             #repeat()
     
-    def spending_allocation(self, var_expenses): 
+    def spending_allocation(self, var_spend, var_expenses): 
         """Calculates the percentages of income that goes towards variable 
         expenses (groceries, recreation, etc).
-        
-        Args:
-            var_expenses(float): total variable expenses
-            
+
         Returns:
             (float): the percentage of income going towards each category.
         """
-        pctg = (var_expenses/total_income)
-        return("Percentage of income going toward variable expenses: {:.2%}".format(pctg))
+        pctg = (var_spend/total_income)
+        return("Percentage of income going toward all variable expenses: {:.2%}".format(pctg))
+        
+        for key in var_expenses:
+            eachpctg = (var_expenses[key]/total_income) 
+            print("Percentage of income going toward",key,": {:.2%}".format(eachpctg))
+
 
 class Graphs:
       """  A visual representation of user spending
