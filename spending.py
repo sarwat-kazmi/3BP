@@ -147,9 +147,17 @@ class Calculation:
         """Calculates the percentage of income that goes towards fixed/variable 
         expenses.
     
+<<<<<<< HEAD
+=======
+    def spending_allocation(self, var_spend, var_expenses): 
+        """Calculates the percentages of income that goes towards variable 
+        expenses (groceries, recreation, etc).
+
+>>>>>>> 8339f3b8a1096a9c6563f0c4819f8a7bd3c03876
         Returns:
             (tuple): the percentage of income going towards each category.
         """
+<<<<<<< HEAD
         
         check = Calculation(self.total_income)
         
@@ -161,6 +169,15 @@ class Calculation:
         pctg1 = round((fixed/self.total_income)*100, 2)
         pctg2 = round((var/self.total_income)*100, 2)
         return pctg1, pctg2
+=======
+        pctg = (var_spend/total_income)
+        return("Percentage of income going toward all variable expenses: {:.2%}".format(pctg))
+        
+        for key in var_expenses:
+            eachpctg = (var_expenses[key]/total_income) 
+            print("Percentage of income going toward",key,": {:.2%}".format(eachpctg))
+
+>>>>>>> 8339f3b8a1096a9c6563f0c4819f8a7bd3c03876
 
 class Graphs:
     """  A visual representation of user spending
