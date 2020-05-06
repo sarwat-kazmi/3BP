@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib
+import matplotlib.pyplot as plt
 import sys
 from argparse import ArgumentParser
 
@@ -180,6 +181,25 @@ class Graphs:
         Returns:
             bar plot of users' expenses
         """
+        
+        # call fixed_expenses and var_expenses dicts from user_expenses()
+        #Calculations.user_expenses()
+        
+        # combine both dictionaries into one
+        for x in [fixed_expenses, var_expenses]:
+            self.expenses.update(x)
+        
+        keys = self.expenses.keys()
+        values = self.expenses.values()
+        
+        fig, ax = plt.subplots()
+        bp = ax.bar(keys, values)
+        
+        ax.set_ylabel("Amount in dollars")
+        ax.set_title("User Fixed and Variable Expenses")
+        ax.set_xlabel("Expense Name")
+        # view plot in vscode
+        #plt.show()
 
     def cutbacks(self):
         """  Provides a visual representation of how much money the user 
@@ -207,6 +227,16 @@ class Graphs:
         costs['habits'] = total
         
         return round(costs['habits'], 2)
+        
+        # pie chart 
+        labels = costs.keys()
+        sizes = costs.values()
+        
+        fig, ax = plt.subplots()
+        ax.pie(sizes, labels = labels, autopct = '%1.1f%%')
+        ax.axis('equal')
+        ax.set_title("Habits")
+        #plt.show()
 
 def parse_args(arglist):
     parser = ArgumentParser()
