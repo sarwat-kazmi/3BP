@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib
 import csv
+import sys
+from argparse import ArgumentParser
 
 
 """ classes for calculation and visual display """
@@ -10,22 +12,16 @@ class Calculation:
     """ Calculating various components of and building a user's financial profile.
     
     Attributes:
-        total_income (float): total income user makes
-        total_expenses (float): total of expenses user spends on
-        fixed_expenses (float):  total number for fixed expenses
-        var_expenses (float):  total number for variable expenses
+        total_income (float): users total income (yearly)
             
     Returns:
         CSV file       
     """
     
-    def __init__(self, total_income, total_expenses, fixed_expenses, var_expenses):
+    def __init__(self, total_income):
         self.total_income = total_income
-        self.total_expenses = total_expenses
-        self.fixed_expenses = fixed_expenses
-        self.var_expenses = var_expenses
-
-    def user_expenses(self, fixed_expenses, var_expenses):
+        
+    def user_expenses(self):
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
         and variable expenses (i.e. coffee, gas, etc.).
         
@@ -37,143 +33,155 @@ class Calculation:
             Dictionaries of user's financial profile
         
         """
-        
-        # dictionaries for expenses
-        
+
         fixed_expenses = {}
-        # ex. "rent": 1000.00, "tuition": 5000.00, "car insurance": 200.00, 
-        # "student loans": 500.00, "gym": 90.00
-        
         var_expenses = {}
-        # ex. "gifts": 150.00, "clothing": 400.00, "gas": 100.00, 
-        # "groceries": 200.00, "parking": 85.00
-        
+        """
+        test_fixed = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
+        test_var = {'gas':60.0, 'gifts':150.00, 'clothing':400.00}
+        """
+        income_df = pd.DataFrame()
+
         while True:
-            
-            # FIXED EXPENSES
-            
-            # name of expense (i.e. rent, tuition)
-            fixed = input(str("FIXED expenses, name? "))
+            fixed = str(input("FIXED expenses, name? "))
             if fixed == "done":
                 break
-            # how much they spent (i.e. 500.00)
-            cost = input("How much?  (dollars and cents) ")
-
+            cost = float(input("How much?  (dollars and cents) "))
             fixed_expenses[fixed] = cost
-            
+
         while True:
-            
-            # VARIABLE EXPENSES
-            
-            var = input(str("VARIABLE expenses, name? "))
+            var = str(input("VARIABLE expenses, name? "))
             if var == "done":
                 break
-            cost = input("How much?  (dollars and cents) ")
-            
+            cost = float(input("How much?  (dollars and cents) "))
             var_expenses[var] = cost
 
-        with open('user_expenses.csv', 'w', newline='') as csvfile:
-            csv_col = ['Expense Type', 'Expense Cost']
-            writer = csv.DictWriter(csvfile, fieldnames=csv_col)
-            writer.writeheader()
-    
-    def spend_check(self, fixed_spend, var_spend):
-        """ Calculates whether user is overspending by checking whether their 
-        variable expenses surpass their fixed expenses.
+        print(fixed_expenses)
+        print(var_expenses)
         
-        Args:
-            fixed_spend (float): amount of fixed expenses
-            var_spend (float): amount of variable expenses
-        
-        Returns:
-            total_spend (float): check point to see how expenditures 
-            and earnings compare
-        
+        income_df = pd.DataFrame({'fixed expenses':fixed_expenses, 
+                                  'variable expenses':var_expenses})
+
+        income_df.fillna(0).to_csv('expense_sheet.csv', encoding='utf-8', 
+                                   index=False)
         """
+        test_df = pd.DataFrame({'fixed expenses':test_fixed, 
+                                  'variable expenses':test_var})
+        """
+        return income_df.fillna(0)
         
-        while True:
-            fixed_spend = sum(fixed_expenses.values())
-            var_spend = sum(var_expenses.values())
-            total_income = float(input("Enter total income here: "))
-            total_spend = fixed_spend + var_spend
-            if total_spend > total_income:
-                print("You have gone over budget.")
-            else:
-                print("You are within budget.")
-            
+    def spend_check(self):
+        """ Calculates whether user is overspending by adding fixed and variable
+        epxenses and comparing to the users total income.
+
+        Returns:
+            str:  lets user know if they are over spending or on budget.
+        """
+        spend = ""
+
+        check = Calculation(self.total_income)
+        user_expenses = check.user_expenses()
+        fixed = sum(user_expenses['fixed expenses'])
+        var = sum(user_expenses['variable expenses'])
+
+        overspend = round(fixed + var, 2)
+        monthly_earn = round(self.total_income/12, 2)
+        excess_spend = round(monthly_earn - overspend, 2)
+
+        if fixed + var > monthly_earn:
+            spend = ('Every month you are spending $' + str(overspend) + '.' +
+                    '  This is $' + str(excess_spend) + 
+                    ' dollars over your monthly earnings of $' + 
+                    str(monthly_earn))
+        else:
+            spend = ('Every month you are spending $' + str(overspend) + '.' +
+                    '  This is under your monthly earnings of $' + 
+                    str(monthly_earn))
+        return spend
+
     def interest(self): 
         """Calculates the amount of interest that will be accumulated on loans.
-       
+        
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
         """
         
-        loan = str(input("Enter what the loan is for: "))
-        principle_amt = float(input("Enter the principle amount of the loan: "))
-        interest_rate = float(input("Enter the interest rate on the loan: "))
-        duration = int(input("Enter the full duration of the loan: "))
-        int_type = str(input("Enter if 'simple' or 'compound': "))
+        while True: 
+            loan = str(input("Enter NAME of loan: "))
+            p = float(input("Enter the PRINCIPAL (dollars and cents): "))
+            r = float(input("Enter the RATE (% per year): "))
+            R = r/100
+            t = int(input("Enter the TIME (months): "))
+            T = t/12
+            int_type = str(input("Enter SIMPLE or COMPOUND: "))
+
+            if int_type == "SIMPLE": 
+                #total_due = (p + (p * r * t))
+                interest_due = p * R * T
+                break
+            elif int_type == "COMPOUND":
+                n = str(input("Enter MONTHLY, QUARTERLY, or YEARLY: "))
+                if n == "MONTHLY":
+                    total_due = p * (1 + R/12)**(12*T)
+                    interest_due = round(total_due - p)
+                    break
+                elif n == "QUARTERLY":
+                    total_due = p * (1 + R/4)**(4*T)
+                    interest_due = round(total_due - p, 2)
+                    break
+                elif n == "YEARLY":
+                    total_due = p * (1 + R/1)**(1*T)
+                    interest_due = round(total_due - p, 2)
+                    break
+                else:
+                    pass
         
-        if int_type.lower() == "simple": 
-            interest_due = (principle_amt * interest_rate * duration) / 100
-            print(interest_due)
-        
-        else:
-            interest_due = principle_amt * ((1 + interest_rate/100)**duration)
-            print(interest_due)
-            
-    #repeat()
+        print("Loan: " + loan)
+        print("Principal amount: " + str(p))
+        print("Rate: " + str(r) + '%')
+        print("Time: " + str(t) + ' months')
+        return interest_due
+
+    def spending_allocation(self): 
+        """Calculates the percentage of income that goes towards fixed/variable 
+        expenses.
     
-    #def repeat(): potential function to repeat interest() calculations for a diff loan
-        #repeat = input("Would you like to get the total interest due for another loan? enter yes or no: ")
-        #if repeat.lower() == "yes":
-            #interest()
-        #elif repeat.lower() == "no":
-            #print("Your interest amounts have been calculated.")
-        #else:
-            #repeat()
-    
-    def spending_allocation(self, var_expenses): 
-        """Calculates the percentages of income that goes towards variable 
-        expenses (groceries, recreation, etc).
-        
-        Args:
-            var_expenses(float): total variable expenses
-            
         Returns:
-            (float): the percentage of income going towards each category.
+            (tuple): the percentage of income going towards each category.
         """
-        pctg = (var_expenses/total_income)
-        return("Percentage of income going toward variable expenses: {:.2%}".format(pctg))
+        
+        check = Calculation(self.total_income)
+        
+        user_expenses = check.user_expenses()
+        
+        fixed = sum(user_expenses['fixed expenses'])
+        var = sum(user_expenses['variable expenses'])
+
+        pctg1 = round((fixed/self.total_income)*100, 2)
+        pctg2 = round((var/self.total_income)*100, 2)
+        return pctg1, pctg2
 
 class Graphs:
-      """  A visual representation of user spending
+    """  A visual representation of user spending
     
     Attributes:
-        earnings (dict):  dictionary of yearly income
-        expenses (dict):  dictionary of yearly outflow
-    
+        expenses (dict):  dictionary of users monthly expenses
+
     Returns:
         pie chart, bar plot
     """
     
-    def __init__(self, earnings, expenses):
-        self.earnings = {}
+    def __init__(self):
         self.expenses = {}
 
-    def biggest_expenses(self):
-        """ Provides a visual representation of the users largest expenses
+    def expenses(self):
+        """ Provides a visual representation of the users expenses
         
         Returns:
-            bar plot of largest expenses from expenses dictionary
+            bar plot of users' expenses
         """
-        
-        
-        for exp in self.expenses.items():
-            
-        
-        
+
     def cutbacks(self):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
@@ -185,21 +193,43 @@ class Graphs:
         habits = {}
         
         while True:
-            habit = input(str("Enter name of habit (one word)"))    
-            cost = input(float("How much do you spend monthly to supplement this"
-                             "habit? (enter dollars and cents)"))
-            
-            habits[habit] = cost
-            
+            habit = input(str("Enter NAME of habit (one word): "))
             if habit == "done":
-                break
-        
+                break    
+            cost = float(input("How much do you spend monthly to supplement this "
+                             "habit? (enter dollars and cents): "))
+            habits[habit] = cost
+
         costs = {}
-        total = 0
+        total = 0.0
         
-        for k, v in dict.items():
+        for v in habits.values():
             total += v*12
-        
         costs['habits'] = total
         
-        print('You could be saving ' + str(costs['habits']) + ' dollar(s) every year')
+        return round(costs['habits'], 2)
+
+def parse_args(arglist):
+    parser = ArgumentParser()
+    parser.add_argument("total_income", help="total income for current year",
+                        type=float)
+    args = parser.parse_args(arglist)
+    return args
+
+def main(arglist):
+    args = parse_args(arglist)
+    c = Calculation(args.total_income)
+    #print(c.user_expenses())
+    print(c.spend_check())
+    #print('Total interest paid is $' + str(c.interest()))
+    #print('Fixed/variable spending (percent of total income): ' 
+    #      + str(c.spending_allocation()))
+    g = Graphs()
+    #expenses = c.user_expenses()
+    #fixed = float(sum(expenses['fixed expenses']))
+    #var = float(sum(expenses['variable expenses']))
+    #print('You could be saving $' + str(g.cutbacks()) + 
+    #          ' dollar(s) every year.')
+    
+if __name__ == "__main__":
+    main(sys.argv[1:])
