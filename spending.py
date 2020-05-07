@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import sys
 from argparse import ArgumentParser
@@ -20,6 +19,8 @@ class Calculation:
     
     def __init__(self, total_income):
         self.total_income = total_income
+        self.fixed_expenses = {}
+        self.var_expenses = {}
         
     def user_expenses(self):
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
@@ -33,13 +34,13 @@ class Calculation:
             Dictionaries of user's financial profile
         
         """
-
-        fixed_expenses = {}
-        var_expenses = {}
         """
         test_fixed = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
         test_var = {'gas':60.0, 'gifts':150.00, 'clothing':400.00}
+        self.fixed_expenses = test_fixed
+        self.var_expenses = test_var
         """
+        
         income_df = pd.DataFrame()
 
         while True:
@@ -47,26 +48,26 @@ class Calculation:
             if fixed == "done":
                 break
             cost = float(input("How much?  (dollars and cents) "))
-            fixed_expenses[fixed] = cost
+            self.fixed_expenses[fixed] = cost
 
         while True:
             var = str(input("VARIABLE expenses, name? "))
             if var == "done":
                 break
             cost = float(input("How much?  (dollars and cents) "))
-            var_expenses[var] = cost
+            self.var_expenses[var] = cost
 
-        print(fixed_expenses)
-        print(var_expenses)
+        print(self.fixed_expenses)
+        print(self.var_expenses)
         
-        income_df = pd.DataFrame({'fixed expenses':fixed_expenses, 
-                                  'variable expenses':var_expenses})
+        income_df = pd.DataFrame({'fixed expenses':self.fixed_expenses, 
+                                  'variable expenses':self.var_expenses})
 
         income_df.fillna(0).to_csv('expense_sheet.csv', encoding='utf-8', 
                                    index=False)
         """
-        test_df = pd.DataFrame({'fixed expenses':test_fixed, 
-                                  'variable expenses':test_var})
+        test_df = pd.DataFrame({'fixed expenses':self.fixed_expenses, 
+                                  'variable expenses':self.var_expenses})
         """
         return income_df.fillna(0)
         
@@ -118,7 +119,7 @@ class Calculation:
 
             if int_type == "SIMPLE": 
                 #total_due = (p + (p * r * t))
-                interest_due = p * R * T
+                interest_due = round((p * R * T), 2)
                 break
             elif int_type == "COMPOUND":
                 n = str(input("Enter MONTHLY, QUARTERLY, or YEARLY: "))
@@ -173,24 +174,19 @@ class Graphs:
     """
     
     def __init__(self):
-        self.expenses = {}
+        self.expense = {}
 
-    def expenses(self):
+    def expenses(self, fixed, var):
         """ Provides a visual representation of the users expenses
         
         Returns:
-            bar plot of users' expenses
+            bar plot:  displays users' expenses
         """
         
-        # call fixed_expenses and var_expenses dicts from user_expenses()
-        #Calculations.user_expenses()
-        
-        # combine both dictionaries into one
-        for x in [fixed_expenses, var_expenses]:
-            self.expenses.update(x)
-        
-        keys = self.expenses.keys()
-        values = self.expenses.values()
+        for x in [fixed, var]:
+            self.expense.update(x)
+        keys = self.expense.keys()
+        values = self.expense.values()
         
         fig, ax = plt.subplots()
         bp = ax.bar(keys, values)
@@ -198,45 +194,53 @@ class Graphs:
         ax.set_ylabel("Amount in dollars")
         ax.set_title("User Fixed and Variable Expenses")
         ax.set_xlabel("Expense Name")
-        # view plot in vscode
-        #plt.show()
+        return plt.show()
 
-    def cutbacks(self):
+    def cutbacks(self, income):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
         
         Returns:
-            pie chart of money saved  
+            pie chart:  displays users' spending habits  
         """
         
         habits = {}
         
         while True:
-            habit = input(str("Enter NAME of habit (one word): "))
+            habit = str(input("Enter NAME of habit (one word): "))
             if habit == "done":
                 break    
             cost = float(input("How much do you spend monthly to supplement this "
                              "habit? (enter dollars and cents): "))
             habits[habit] = cost
 
-        costs = {}
-        total = 0.0
+        hab = [] 
+        total = []
+        saving = 0.0
         
-        for v in habits.values():
-            total += v*12
-        costs['habits'] = total
+        for k, v in habits.items():
+            hab.append(k)
+            total.append(v)
+            print('You are spending ' + str(v) + 
+                  ' dollar(s) every month on ' + '[' + k + ']' + '.')
+            print('This means every year you are spending ' + str(v*12) + 
+                  ' dollar(s) on ' + '[' + k + ']' + '.')
+            print('[' + k + ']' + ' account(s) for ' + 
+                  str(round(((v*12)/income)*100, 2)) + 
+                  ' percent of your total income per year.\n')
+            saving += v*12
         
-        return round(costs['habits'], 2)
+        print('You could be saving $' + str(round(saving, 2)) + 
+              ' dollar(s) a year if you cutback.')
         
-        # pie chart 
-        labels = costs.keys()
-        sizes = costs.values()
+        labels = hab
+        sizes = total
         
         fig, ax = plt.subplots()
-        ax.pie(sizes, labels = labels, autopct = '%1.1f%%')
+        ax.pie(sizes, labels=labels, autopct = '%1.1f%%', startangle=90)
         ax.axis('equal')
         ax.set_title("Habits")
-        #plt.show()
+        return plt.show()
 
 def parse_args(arglist):
     parser = ArgumentParser()
@@ -248,17 +252,14 @@ def parse_args(arglist):
 def main(arglist):
     args = parse_args(arglist)
     c = Calculation(args.total_income)
-    #print(c.user_expenses())
-    print(c.spend_check())
-    #print('Total interest paid is $' + str(c.interest()))
-    #print('Fixed/variable spending (percent of total income): ' 
-    #      + str(c.spending_allocation()))
     g = Graphs()
-    #expenses = c.user_expenses()
-    #fixed = float(sum(expenses['fixed expenses']))
-    #var = float(sum(expenses['variable expenses']))
-    #print('You could be saving $' + str(g.cutbacks()) + 
-    #          ' dollar(s) every year.')
+    c.user_expenses()
+    c.spend_check()
+    print('Total interest paid is $' + str(c.interest()))
+    print('Fixed/variable spending (percent of total income): ' 
+          + str(c.spending_allocation()))
+    g.expenses(c.fixed_expenses, c.var_expenses)
+    g.cutbacks(c.total_income)
     
 if __name__ == "__main__":
     main(sys.argv[1:])
