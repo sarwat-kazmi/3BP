@@ -34,11 +34,8 @@ class Calculation:
             Dictionaries of user's financial profile
         
         """
-        """
-        test_fixed = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
-        test_var = {'gas':60.0, 'gifts':150.00, 'clothing':400.00}
-        self.fixed_expenses = test_fixed
-        self.var_expenses = test_var
+        self.fixed_expenses = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
+        self.var_expenses = {'gas':60.0, 'gifts':150.00, 'clothing':400.00}
         """
         
         income_df = pd.DataFrame()
@@ -68,8 +65,8 @@ class Calculation:
         """
         test_df = pd.DataFrame({'fixed expenses':self.fixed_expenses, 
                                   'variable expenses':self.var_expenses})
-        """
-        return income_df.fillna(0)
+        
+        return test_df.fillna(0)
         
     def spend_check(self):
         """ Calculates whether user is overspending by adding fixed and variable
@@ -78,12 +75,12 @@ class Calculation:
         Returns:
             str:  lets user know if they are over spending or on budget.
         """
+        if len(self.fixed_expenses) or len(self.var_expenses) == 0:
+            return 'Please run user_expenses() in Calculations class.'
+        
         spend = ""
-
-        check = Calculation(self.total_income)
-        user_expenses = check.user_expenses()
-        fixed = sum(user_expenses['fixed expenses'])
-        var = sum(user_expenses['variable expenses'])
+        fixed = sum(self.fixed_expenses.values())
+        var = sum(self.var_expenses.values())
 
         overspend = round(fixed + var, 2)
         monthly_earn = round(self.total_income/12, 2)
@@ -151,13 +148,11 @@ class Calculation:
         Returns:
             (tuple): the percentage of income going towards each category.
         """
-
-        check = Calculation(self.total_income)
+        if len(self.fixed_expenses) or len(self.var_expenses) == 0:
+            return 'Please run user_expenses() in Calculations class.'
         
-        user_expenses = check.user_expenses()
-        
-        fixed = sum(user_expenses['fixed expenses'])
-        var = sum(user_expenses['variable expenses'])
+        fixed = sum(self.fixed_expenses.values())
+        var = sum(self.var_expenses.values())
 
         pctg1 = round((fixed/self.total_income)*100, 2)
         pctg2 = round((var/self.total_income)*100, 2)
@@ -167,7 +162,7 @@ class Graphs:
     """  A visual representation of user spending
     
     Attributes:
-        expenses (dict):  dictionary of users monthly expenses
+        expense (dict):  dictionary of users monthly expenses
 
     Returns:
         pie chart, bar plot
@@ -182,6 +177,8 @@ class Graphs:
         Returns:
             bar plot:  displays users' expenses
         """
+        if len(fixed) or len(var) == 0:
+            return 'Please run user_expenses() in Calculations class.'
         
         for x in [fixed, var]:
             self.expense.update(x)
@@ -254,7 +251,7 @@ def main(arglist):
     c = Calculation(args.total_income)
     g = Graphs()
     #c.user_expenses()
-    #c.spend_check()
+    #print(c.spend_check())
     #print('Total interest paid is $' + str(c.interest()))
     #print('Fixed/variable spending (percent of total income): ' 
     #      + str(c.spending_allocation()))
