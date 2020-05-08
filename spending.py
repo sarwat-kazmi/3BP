@@ -12,6 +12,10 @@ class Calculation:
     
     Attributes:
         total_income (float): users total income (yearly)
+        fixed_expenses (dict):  contains name and dollar amount of 
+                                fixed expenses
+        var_expenses (dict):  contains name and dollar amount of 
+                              variable expenses
             
     Returns:
         CSV file       
@@ -26,12 +30,13 @@ class Calculation:
         """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
         and variable expenses (i.e. coffee, gas, etc.).
         
-        Args:
-            fixed_expenses (dict): dictionary of user's fixed expenses
-            var_expenses (dict): dictionary of user's variable expenses
-        
+        Side effects:
+            modifies self.fixed_expenses, self.var_expenses
+            creates 'expense_sheet.csv' file
+            asks user for input
+
         Returns:
-            Dictionaries of user's financial profile
+            DataFrame object:  contains fixed and variable expenses
         
         """
         self.fixed_expenses = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
@@ -72,6 +77,9 @@ class Calculation:
         """ Calculates whether user is overspending by adding fixed and variable
         epxenses and comparing to the users total income.
 
+        Side effects:
+            prints to the terminal
+
         Returns:
             str:  lets user know if they are over spending or on budget.
         """
@@ -100,6 +108,9 @@ class Calculation:
     def interest(self): 
         """Calculates the amount of interest that will be accumulated on loans.
         
+        Side effects:
+            asks user for input, prints to the terminal
+
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
@@ -162,7 +173,7 @@ class Graphs:
     """  A visual representation of user spending
     
     Attributes:
-        expense (dict):  dictionary of users monthly expenses
+        expense (dict):  name and dollar amount of users monthly expenses
 
     Returns:
         pie chart, bar plot
@@ -174,6 +185,14 @@ class Graphs:
     def expenses(self, fixed, var):
         """ Provides a visual representation of the users expenses
         
+        Args:
+            fixed (dict):  name and dollar amount of fixed expenses (monthly)
+            var (dict):  name and dollar amount of variable expenses (monthly)
+        
+        Side effects:
+            modifies self.expense, prints to the terminal, and displays visual
+            graphic
+
         Returns:
             bar plot:  displays users' expenses
         """
@@ -196,6 +215,12 @@ class Graphs:
     def cutbacks(self, income):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
+        
+        Args:
+            income (float):  users total income (yearly amount)
+        
+        Side effects:
+            prints to the terminal, displays visual graphic
         
         Returns:
             pie chart:  displays users' spending habits  
