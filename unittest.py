@@ -12,7 +12,7 @@ class TestSkills(unittest.TestCase):
     def test_income_df(self):
         # check that sum of each column in the dataframe is equal to the sum of the dictionary values
         self.assertEqual(income_df['fixed expenses'].sum, sum(fixed_expenses.values()))
-		self.assertEqual(income_df['variable expenses'].sum, sum(var_expenses.values()))
+        self.assertEqual(income_df['variable expenses'].sum, sum(var_expenses.values()))
     
     def test_validation(self):
         with self.assertRaises(ValueError):
