@@ -214,6 +214,7 @@ class Graphs:
         ax.set_ylabel("Amount in dollars")
         ax.set_title("User Fixed and Variable Expenses")
         ax.set_xlabel("Expense Name")
+        plt.xticks(rotation = 45)
         return plt.show()
 
     def cutbacks(self, income):
