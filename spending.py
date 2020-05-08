@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import sys
 from argparse import ArgumentParser
 
-
 """ classes for calculation and visual display """
 
 class Calculation:
@@ -39,9 +38,16 @@ class Calculation:
             DataFrame object:  contains fixed and variable expenses
         
         """
+        self.fixed_expenses = {'rent':800.00, 'school loans':350.00, 
+                               'cellphone':50.00, 'car insurance': 80.00, 
+                               'health insurance': 150.00, 'metro': 200.00,
+                               'verizon': 60.00}
+        self.var_expenses = {'gas':60.0, 'gifts':150.00, 
+                             'clothing':200.00, 'pepco': 80.00, 
+                             'coffee': 90, 'movies': 100.00, 'dog food': 80.00}
         """
         income_df = pd.DataFrame()
-
+        
         while True:
             fixed = str(input("FIXED expenses, name? "))
             if fixed == "done":
@@ -275,13 +281,6 @@ def main(arglist):
     args = parse_args(arglist)
     c = Calculation(args.total_income)
     g = Graphs()
-    c.fixed_expenses = {'rent':800.00, 'school loans':350.00, 
-                               'cellphone':50.00, 'car insurance': 80.00, 
-                               'health insurance': 150.00, 'metro': 200.00,
-                               'verizon': 60.00}
-    c.var_expenses = {'gas':60.0, 'gifts':150.00, 
-                             'clothing':200.00, 'pepco': 80.00, 
-                             'coffee': 90, 'movies': 100.00, 'dog food': 80.00}
     print(c.user_expenses())
     print(c.spend_check())
     print('Total interest paid is $' + str(c.interest()))
@@ -289,6 +288,6 @@ def main(arglist):
           + str(c.spending_allocation()))
     print(g.expenses(c.fixed_expenses, c.var_expenses))
     print(g.cutbacks(c.total_income))
-    
+   
 if __name__ == "__main__":
     main(sys.argv[1:])
