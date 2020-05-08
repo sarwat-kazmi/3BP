@@ -9,6 +9,11 @@ class TestSkills(unittest.TestCase):
         self.graph1 = Graphs({"maitre'd": 19200.00, "delivery driver": 24000.00}, {"cellphone": 1200.00, "gas bill": 720.00})
         self.graph2 = Graphs({"cyber security consultant", 90000.00}, {"mortgage": 16800.00, "cellphone": 1440.00})
     
+    def test_income_df(self):
+        # check that sum of each column in the dataframe is equal to the sum of the dictionary values
+        self.assertEqual(income_df['fixed expenses'].sum, sum(fixed_expenses.values()))
+		self.assertEqual(income_df['variable expenses'].sum, sum(var_expenses.values()))
+    
     def test_validation(self):
         with self.assertRaises(ValueError):
             Graphs(["plumber", 3000], ["welder", 3000])
