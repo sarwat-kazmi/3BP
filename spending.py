@@ -13,9 +13,9 @@ class Calculation:
     Attributes:
         total_income (float): users total income (yearly)
         fixed_expenses (dict):  contains name and dollar amount of 
-                                fixed expenses
+                                fixed expenses (monthly)
         var_expenses (dict):  contains name and dollar amount of 
-                              variable expenses
+                              variable expenses (monthly)
             
     Returns:
         CSV file       
@@ -39,10 +39,7 @@ class Calculation:
             DataFrame object:  contains fixed and variable expenses
         
         """
-        self.fixed_expenses = {'rent':1000.00, 'loans':400.00, 'cellphone':200.00}
-        self.var_expenses = {'gas':60.0, 'gifts':150.00, 'clothing':400.00}
         """
-        
         income_df = pd.DataFrame()
 
         while True:
@@ -83,7 +80,8 @@ class Calculation:
         Returns:
             str:  lets user know if they are over spending or on budget.
         """
-        if len(self.fixed_expenses) or len(self.var_expenses) == 0:
+
+        if len(self.fixed_expenses) & len(self.var_expenses) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         spend = ""
@@ -159,7 +157,7 @@ class Calculation:
         Returns:
             (tuple): the percentage of income going towards each category.
         """
-        if len(self.fixed_expenses) or len(self.var_expenses) == 0:
+        if len(self.fixed_expenses) & len(self.var_expenses) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         fixed = sum(self.fixed_expenses.values())
@@ -196,7 +194,7 @@ class Graphs:
         Returns:
             bar plot:  displays users' expenses
         """
-        if len(fixed) or len(var) == 0:
+        if len(fixed) & len(var) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         for x in [fixed, var]:
@@ -231,7 +229,9 @@ class Graphs:
         while True:
             habit = str(input("Enter NAME of habit (one word): "))
             if habit == "done":
-                break    
+                break
+            if habit == "none":
+                return "No habits entered, goodbye."
             cost = float(input("How much do you spend monthly to supplement this "
                              "habit? (enter dollars and cents): "))
             habits[habit] = cost
@@ -275,13 +275,20 @@ def main(arglist):
     args = parse_args(arglist)
     c = Calculation(args.total_income)
     g = Graphs()
-    #c.user_expenses()
-    #print(c.spend_check())
-    #print('Total interest paid is $' + str(c.interest()))
-    #print('Fixed/variable spending (percent of total income): ' 
-    #      + str(c.spending_allocation()))
-    #g.expenses(c.fixed_expenses, c.var_expenses)
-    #g.cutbacks(c.total_income)
+    c.fixed_expenses = {'rent':800.00, 'school loans':350.00, 
+                               'cellphone':50.00, 'car insurance': 80.00, 
+                               'health insurance': 150.00, 'metro': 200.00,
+                               'verizon': 60.00}
+    c.var_expenses = {'gas':60.0, 'gifts':150.00, 
+                             'clothing':200.00, 'pepco': 80.00, 
+                             'coffee': 90, 'movies': 100.00, 'dog food': 80.00}
+    print(c.user_expenses())
+    print(c.spend_check())
+    print('Total interest paid is $' + str(c.interest()))
+    print('Fixed/variable spending (percent of total income): ' 
+          + str(c.spending_allocation()))
+    print(g.expenses(c.fixed_expenses, c.var_expenses))
+    print(g.cutbacks(c.total_income))
     
 if __name__ == "__main__":
     main(sys.argv[1:])
