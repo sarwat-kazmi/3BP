@@ -253,13 +253,13 @@ def main(arglist):
     args = parse_args(arglist)
     c = Calculation(args.total_income)
     g = Graphs()
-    c.user_expenses()
-    c.spend_check()
-    print('Total interest paid is $' + str(c.interest()))
-    print('Fixed/variable spending (percent of total income): ' 
-          + str(c.spending_allocation()))
-    g.expenses(c.fixed_expenses, c.var_expenses)
-    g.cutbacks(c.total_income)
+    #c.user_expenses()
+    #c.spend_check()
+    #print('Total interest paid is $' + str(c.interest()))
+    #print('Fixed/variable spending (percent of total income): ' 
+    #      + str(c.spending_allocation()))
+    #g.expenses(c.fixed_expenses, c.var_expenses)
+    #g.cutbacks(c.total_income)
     
 if __name__ == "__main__":
     main(sys.argv[1:])
