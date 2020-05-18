@@ -49,8 +49,10 @@ class TestMetroSystem(unittest.TestCase): #laraib
         self.graph1.cutbacks(50000.00)
     
     def test_expenses(self): #laraib
-        """ Is the sum of the values in the self.expense dictionary equal to 
-        the sum of the values in both fixed and var?
+        """ self.expense is a dictionary created from the 
+        keys and values of both fixed and var. Is the sum of the values 
+        in the self.expense dictionary equal to the sum of the values in fixed 
+        plus the sum of the values in var?
         """
         
         self.assertEqual(sum(self.expense.values()), 2205.00)
