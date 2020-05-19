@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 from argparse import ArgumentParser
+from docx import Document
+from docx.shared import Inches
 
 """ classes for calculation and visual display """
 
@@ -15,6 +17,9 @@ class Calculation:
                                 fixed expenses (monthly)
         var_expenses (dict):  contains name and dollar amount of 
                               variable expenses (monthly)
+    
+    Side effects:
+        creates a CSV file and a Word document, 'finances.docx'
             
     Returns:
         CSV file       
@@ -30,64 +35,86 @@ class Calculation:
         and variable expenses (i.e. coffee, gas, etc.).
         
         Side effects:
-            modifies self.fixed_expenses, self.var_expenses
-            creates 'expense_sheet.csv' file
-            asks user for input
+            modifies self.fixed_expenses, self.var_expenses,
+            creates 'expense_sheet.csv' file,
+            asks user for input, 
+            writes return result to Word document
 
         Returns:
             DataFrame object:  contains fixed and variable expenses
         
         """
-        self.fixed_expenses = {'rent':800.00, 'school loans':350.00, 
-                               'cellphone':50.00, 'car insurance': 80.00, 
-                               'health insurance': 150.00, 'metro': 200.00,
-                               'verizon': 60.00}
-        self.var_expenses = {'gas':60.0, 'gifts':150.00, 
-                             'clothing':200.00, 'pepco': 80.00, 
-                             'coffee': 90, 'movies': 100.00, 'dog food': 80.00}
-        """
+        
         income_df = pd.DataFrame()
         
         while True:
-            fixed = str(input("FIXED expenses, name? "))
-            if fixed == "done":
-                break
-            cost = float(input("How much?  (dollars and cents) "))
+            try:
+                fixed = input("FIXED expenses, name? ")
+                if fixed == 'done':
+                    break
+                if fixed.isalpha():
+                    pass
+                else:
+                    raise TypeError
+            except TypeError:
+                print("Letters only please.", fixed)
+                continue
+            try:
+                cost = input("How much?  (dollars and cents) ")
+                if cost == 'done':
+                    break
+                cost = round(float(cost), 2)
+            except ValueError:
+                print("Only numbers allowed, please enter expense again.")
+                continue
             self.fixed_expenses[fixed] = cost
 
         while True:
-            var = str(input("VARIABLE expenses, name? "))
-            if var == "done":
-                break
-            cost = float(input("How much?  (dollars and cents) "))
+            try:
+                var = input("VARIABLE expenses, name? ")
+                if var == "done":
+                    break
+                if var.isalpha():
+                    pass
+                else:
+                    raise TypeError
+            except TypeError:
+                print("Letters only please.")
+                continue
+            try:
+                cost = input("How much?  (dollars and cents) ")
+                if cost == 'done':
+                    break
+                cost = round(float(cost), 2)
+            except ValueError:
+                print("Please enter expense again.")
+                continue
             self.var_expenses[var] = cost
 
-        print(self.fixed_expenses)
-        print(self.var_expenses)
+        if len(self.fixed_expenses) == 0 and len(self.var_expenses) == 0:
+            print("Please enter FIXED and VARIABLE expenses to continue,", 
+                  "goodbye.")
+            exit()
         
         income_df = pd.DataFrame({'fixed expenses':self.fixed_expenses, 
                                   'variable expenses':self.var_expenses})
 
         income_df.fillna(0).to_csv('expense_sheet.csv', encoding='utf-8', 
                                    index=False)
-        """
-        test_df = pd.DataFrame({'fixed expenses':self.fixed_expenses, 
-                                  'variable expenses':self.var_expenses})
-        
-        return test_df.fillna(0)
+        return income_df.fillna(0)
         
     def spend_check(self):
         """ Calculates whether user is overspending by adding fixed and variable
         epxenses and comparing to the users total income.
 
         Side effects:
-            prints to the terminal
+            writes return result to Word document
 
         Returns:
             str:  lets user know if they are over spending or on budget.
         """
 
-        if len(self.fixed_expenses) & len(self.var_expenses) == 0:
+        if len(self.fixed_expenses) == 0 & len(self.var_expenses) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         spend = ""
@@ -96,12 +123,12 @@ class Calculation:
 
         overspend = round(fixed + var, 2)
         monthly_earn = round(self.total_income/12, 2)
-        excess_spend = round(monthly_earn - overspend, 2)
+        excess_spend = round(overspend - monthly_earn, 2)
 
         if fixed + var > monthly_earn:
             spend = ('Every month you are spending $' + str(overspend) + '.' +
                     '  This is $' + str(excess_spend) + 
-                    ' dollars over your monthly earnings of $' + 
+                    ' over your monthly earnings of $' + 
                     str(monthly_earn))
         else:
             spend = ('Every month you are spending $' + str(overspend) + '.' +
@@ -113,57 +140,135 @@ class Calculation:
         """Calculates the amount of interest that will be accumulated on loans.
         
         Side effects:
-            asks user for input, prints to the terminal
+            asks user for input, 
+            prints to the terminal,
+            writes the return result to the Word document
 
         Returns:
             (float): the total amount of interest due at the end of the
             loan period.
         """
+        interest_due = 'Total interest paid is $' + str(0.0)
         
-        while True: 
-            loan = str(input("Enter NAME of loan: "))
-            p = float(input("Enter the PRINCIPAL (dollars and cents): "))
-            r = float(input("Enter the RATE (% per year): "))
-            R = r/100
-            t = int(input("Enter the TIME (months): "))
-            T = t/12
-            int_type = str(input("Enter SIMPLE or COMPOUND: "))
-
-            if int_type == "SIMPLE": 
-                #total_due = (p + (p * r * t))
-                interest_due = round((p * R * T), 2)
-                break
-            elif int_type == "COMPOUND":
-                n = str(input("Enter MONTHLY, QUARTERLY, or YEARLY: "))
-                if n == "MONTHLY":
-                    total_due = p * (1 + R/12)**(12*T)
-                    interest_due = round(total_due - p)
-                    break
-                elif n == "QUARTERLY":
-                    total_due = p * (1 + R/4)**(4*T)
-                    interest_due = round(total_due - p, 2)
-                    break
-                elif n == "YEARLY":
-                    total_due = p * (1 + R/1)**(1*T)
-                    interest_due = round(total_due - p, 2)
-                    break
-                else:
+        while True:
+            try:
+                loan = input("Enter NAME of loan: ")
+                if loan == 'skip':
+                    return interest_due
+                if loan.isalpha():
                     pass
-        
-        print("Loan: " + loan)
-        print("Principal amount: " + str(p))
-        print("Rate: " + str(r) + '%')
-        print("Time: " + str(t) + ' months')
+                else:
+                    raise TypeError
+            except TypeError:
+                print("Letters only please.")
+                continue
+            try:
+                p = input("Enter the PRINCIPAL (dollars and cents): ")
+                if p == 'skip':
+                    return interest_due
+                p = float(p)
+            except ValueError:
+                print("Numbers only, please enter PRINCIPAL again.")
+                continue
+            try:
+                r = input("Enter the RATE (% per year): ")
+                if r == 'skip':
+                    return interest_due
+                r = float(r)
+                R = r/100
+            except ValueError:
+                print("Numbers only, please enter RATE again.")
+                continue
+            try:
+                t = input("Enter the TIME (months): ")
+                if t == 'skip':
+                    return interest_due
+                t = float(t)
+                T = t/12
+            except ValueError:
+                print("Numbers only, please enter TIME again.")
+                continue
+            try:
+                int_type = input("Enter SIMPLE or COMPOUND: ")
+                if int_type == 'skip':
+                    return interest_due
+                if int_type.isalpha():
+                    pass
+                else:
+                    raise TypeError
+            except TypeError:
+                print("Letters only, please enter information again.")
+                continue
+            if int_type == "SIMPLE":
+                #total_due = (p + (p * r * t))
+                interest_due = ('Loan: ' + str(loan) + ', ' + 
+                                 'Principal amount: ' + str(p) + 
+                                 ', ' + 'Rate: ' + str(r) + '%' + 
+                                 ', ' + 'Time: ' + str(t) + 
+                                 ' months' + ', ' +
+                                 'Simple Interest Loan' + ', ' + 
+                                 'Total interest paid is $' + 
+                                 str(round((p * R * T), 2)))
+                return interest_due
+            elif int_type == "COMPOUND":
+                try:
+                    n = input("Enter MONTHLY, QUARTERLY, or YEARLY: ")
+                    if n.isalpha():
+                        if n == "MONTHLY":
+                            total_due = p * (1 + R/12)**(12*T)
+                            interest_due = ('Loan: ' + str(loan) + ', ' + 
+                                            'Principal amount: ' + str(p) + 
+                                            ', ' + 'Rate: ' + str(r) + '%' + 
+                                            ', ' + 'Time: ' + str(t) + 
+                                            ' months' + ', ' +
+                                            'Compounded: Monthly' + ', ' + 
+                                            'Total interest paid is $' + 
+                                            str(round(total_due - p, 2)))
+                            break
+                        elif n == "QUARTERLY":
+                            total_due = p * (1 + R/4)**(4*T)
+                            interest_due = ('Loan: ' + str(loan) + ', ' + 
+                                            'Principal amount: ' + str(p) + 
+                                            ', ' + 'Rate: ' + str(r) + '%' + 
+                                            ', ' + 'Time: ' + str(t) + 
+                                            ' months' + ', ' +
+                                            'Compounded: Quarterly' + ', ' + 
+                                            'Total interest paid is $' + 
+                                            str(round(total_due - p, 2)))
+                            break
+                        elif n == "YEARLY":
+                            total_due = p * (1 + R/1)**(1*T)
+                            interest_due = ('Loan: ' + str(loan) + ', ' + 
+                                            'Principal amount: ' + str(p) + 
+                                            ', ' + 'Rate: ' + str(r) + '%' + 
+                                            ', ' + 'Time: ' + str(t) + 
+                                            ' months' + ', ' +
+                                            'Compounded: Yearly' + ', ' + 
+                                            'Total interest paid is $' + 
+                                            str(round(total_due - p, 2)))
+                            break
+                        else:
+                            pass
+                    else:
+                        raise TypeError
+                except TypeError:
+                    print("Letters only please, please enter information ",
+                          "again.")
+                    continue
         return interest_due
 
     def spending_allocation(self): 
         """Calculates the percentage of income that goes towards fixed/variable 
         expenses.
+        
+        Side effects:
+            prints to the terminal,
+            writes the return result to the Word document
     
         Returns:
             (tuple): the percentage of income going towards each category.
         """
-        if len(self.fixed_expenses) & len(self.var_expenses) == 0:
+        if len(self.fixed_expenses) == 0 & len(self.var_expenses) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         fixed = sum(self.fixed_expenses.values())
@@ -200,7 +305,7 @@ class Graphs:
         Returns:
             bar plot:  displays users' expenses
         """
-        if len(fixed) & len(var) == 0:
+        if len(fixed) == 0 & len(var) == 0:
             return 'Please run user_expenses() in Calculations class.'
         
         for x in [fixed, var]:
@@ -214,10 +319,9 @@ class Graphs:
         ax.set_ylabel("Amount in dollars")
         ax.set_title("User Fixed and Variable Expenses")
         ax.set_xlabel("Expense Name")
-        plt.xticks(rotation = 45)
         return plt.show()
 
-    def cutbacks(self, income):
+    def habits(self, income):
         """  Provides a visual representation of how much money the user 
         would save by cutting back on specific spending habits.
         
@@ -234,19 +338,34 @@ class Graphs:
         habits = {}
         
         while True:
-            habit = str(input("Enter NAME of habit (one word): "))
-            if habit == "done":
-                break
-            if habit == "none":
-                return "No habits entered, goodbye."
-            cost = float(input("How much do you spend monthly to supplement this "
-                             "habit? (enter dollars and cents): "))
-            habits[habit] = cost
+            try:
+                habit = input("Enter NAME of habit (one word): ")
+                if habit == "done":
+                    break
+                if habit == "none":
+                    break
+                if habit.isalpha():
+                    pass
+                else:
+                    raise TypeError
+            except TypeError:
+                print("Letters only please.")
+                continue
+            try:
+                cost = input("How much do you spend monthly to supplement this " +
+                                "habit? (enter dollars and cents): ")
+                cost = float(cost)
+                habits[habit] = cost
+                continue
+            except ValueError:
+                print("Numbers only please.")
+                continue
 
         hab = [] 
         total = []
         saving = 0.0
-        
+        lst = []
+
         for k, v in habits.items():
             hab.append(k)
             total.append(v)
@@ -258,10 +377,16 @@ class Graphs:
                   str(round(((v*12)/income)*100, 2)) + 
                   ' percent of your total income per year.\n')
             saving += v*12
+            lst.append((k, v, v*12))
         
-        print('You could be saving $' + str(round(saving, 2)) + 
-              ' dollar(s) a year if you cutback.')
+        print('You are spending $' + str(round(saving, 2)) + 
+              ' dollar(s) a year on your habits.')
         
+        for_doc = (lst)
+        
+        if len(habits) == 0:
+            for_doc = "No habits entered."
+
         labels = hab
         sizes = total
         
@@ -269,7 +394,8 @@ class Graphs:
         ax.pie(sizes, labels=labels, autopct = '%1.1f%%', startangle=90)
         ax.axis('equal')
         ax.set_title("Habits")
-        return plt.show()
+        
+        return for_doc, plt.show()
 
 def parse_args(arglist):
     parser = ArgumentParser()
@@ -279,16 +405,70 @@ def parse_args(arglist):
     return args
 
 def main(arglist):
+    count = 0
+    lst = set()
+    lst2 = set()
+    
     args = parse_args(arglist)
     c = Calculation(args.total_income)
     g = Graphs()
+    
+    d = Document()
+    d.add_heading("Three Blind Programmers Presents:  A Birds-eye-view" 
+                  " of your finances", 0)
+    d.add_paragraph('Yearly income: $' + str(c.total_income))
+    d.add_heading('Monthly fixed and variable expenses.', 1)
+    
     print(c.user_expenses())
+    for exp, num in c.fixed_expenses.items():
+        count += 1
+        lst.add(str((exp, num)))
+    
+    count = 0
+    for exp, num in c.var_expenses.items():
+        count += 1
+        lst2.add(str((exp, num)))
+    
+    table = d.add_table(rows=count, cols=2)
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = 'Fixed Expenses'
+    hdr_cells[1].text = 'Variable Expenses'
+
+    for num in lst:
+        row_cells = table.add_row().cells
+        row_cells[0].text = num
+    
+    for num in lst2:
+        row_cells = table.add_row().cells
+        row_cells[1].text = num
+    
     print(c.spend_check())
-    print('Total interest paid is $' + str(c.interest()))
-    print('Fixed/variable spending (percent of total income): ' 
+    d.add_heading('Spending per month.', 1)
+    d.add_paragraph(str(c.spend_check()))
+
+    d.add_heading('Loan information.', 1)
+    d.add_paragraph(str(c.interest()))
+    
+    print('Fixed/variable spending, respectively (percent of total income): ' 
           + str(c.spending_allocation()))
+    d.add_heading('Monthly expenses against total income: $' + 
+                  str(c.total_income), 1)
+    d.add_paragraph('Fixed expenses account for ' + 
+                    str(c.spending_allocation()[0]) + '%' + 
+                    ' of your total income, totaling $' + 
+                    str(sum(c.fixed_expenses.values())) + ' a month.')
+    d.add_paragraph('Variable expenses account for ' + 
+                    str(c.spending_allocation()[1]) + '%' + 
+                    ' of your total income, totaling $' + 
+                    str(sum(c.var_expenses.values())) + ' a month.')
+    
     print(g.expenses(c.fixed_expenses, c.var_expenses))
-    print(g.cutbacks(c.total_income))
-   
+
+    d.add_heading('Monthly habit expenses.', 1)
+    d.add_paragraph('Habit, Monthly cost, Yearly cost')
+    d.add_paragraph(str(g.habits(c.total_income)[0]))
+    
+    d.save('finances.docx')
+  
 if __name__ == "__main__":
     main(sys.argv[1:])
