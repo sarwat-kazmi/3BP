@@ -6,10 +6,11 @@ from argparse import ArgumentParser
 from docx import Document
 from docx.shared import Inches
 
-""" classes for calculation and visual display """
+""" Classes for calculation and visual display of finances"""
 
 class Calculation:
-    """ Calculating various components of and building a user's financial profile.
+    """ Calculating and building various components of a user's financial 
+    profile.
     
     Attributes:
         total_income (float): users total income (yearly)
@@ -19,7 +20,8 @@ class Calculation:
                               variable expenses (monthly)
     
     Side effects:
-        creates a CSV file and a Word document, 'finances.docx'
+        creates a CSV file 'expense_sheet.csv',
+        creates a Word document, 'finances.docx'
             
     Returns:
         CSV file       
@@ -31,17 +33,17 @@ class Calculation:
         self.var_expenses = {}
         
     def user_expenses(self):
-        """ Gathers user info on fixed expenses (i.e. rent, tuition, etc.) 
-        and variable expenses (i.e. coffee, gas, etc.).
+        """ Asks user to enter fixed and variable expenses and stores that
+        information in a DataFrame
         
         Side effects:
             modifies self.fixed_expenses, self.var_expenses,
             creates 'expense_sheet.csv' file,
             asks user for input, 
-            writes return result to Word document
+            writes return result to 'finances.docx'
 
         Returns:
-            DataFrame object:  contains fixed and variable expenses
+            (DataFrame):  contains fixed and variable expenses
         
         """
         
@@ -108,10 +110,10 @@ class Calculation:
         epxenses and comparing to the users total income.
 
         Side effects:
-            writes return result to Word document
+            writes return result to 'finances.docx'
 
         Returns:
-            str:  lets user know if they are over spending or on budget.
+            (str):  lets user know if they are over spending or on budget.
         """
 
         if len(self.fixed_expenses) == 0 & len(self.var_expenses) == 0:
@@ -138,11 +140,21 @@ class Calculation:
         return spend
 
     def input_info(self):
+        """  Asks the user to enter loan information for the interest() method.
+        
+        Side effects:
+            asks the user to enter input,
+            prints to the terminal
+        
+        Returns:
+            (dictionary):  contains the input provided by the user
+        """
         
         info = {}
         
         while True:
-            skip = input("Type 'skip' to skip this step: ")
+            skip = input("Enter any key to proceed or type 'skip'" + 
+                         " to skip this step: ")
             if skip == 'skip':
                 return info
             else:
@@ -209,7 +221,7 @@ class Calculation:
         
         Side effects:
             prints to the terminal,
-            writes the return result to the Word document
+            writes the return result to 'finances.docx'
 
         Returns:
             (float): the total amount of interest due at the end of the
@@ -279,7 +291,7 @@ class Calculation:
         
         Side effects:
             prints to the terminal,
-            writes the return result to the Word document
+            writes the return result to 'finances.docx'
     
         Returns:
             (tuple): the percentage of income going towards each category.
@@ -316,11 +328,12 @@ class Graphs:
             var (dict):  name and dollar amount of variable expenses (monthly)
         
         Side effects:
-            modifies self.expense, prints to the terminal, and displays visual
-            graphic
+            modifies self.expense, 
+            prints to the terminal, 
+            displays visual graphic
 
         Returns:
-            bar plot:  displays users' expenses
+            (bar plot):  displays users' expenses
         """
         if len(fixed) == 0 & len(var) == 0:
             return ('Please enter both your fixed and variable expenses to run' 
@@ -340,6 +353,17 @@ class Graphs:
         return plt.show()
     
     def input_habits(self):
+        """  Asks the user to enter a list of their habits and their monthly 
+        costs
+        
+        Side effects:
+            prints to the terminal,
+            requests user input
+        
+        Returns:
+            (dictionary):  contains the users' listed habits with corresponding 
+            dollar amount
+        """
         
         habits = {}
 
@@ -382,7 +406,7 @@ class Graphs:
             writes to 'finances' document
         
         Returns:
-            pie chart:  displays users' spending habits  
+            (pie chart):  displays users' spending habits  
         """
         
         hab = [] 
