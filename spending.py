@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-import docx
 from argparse import ArgumentParser
 from docx import Document
 from docx.shared import Inches
@@ -58,7 +57,7 @@ class Calculation:
                 else:
                     raise TypeError
             except TypeError:
-                print("Letters only please.", fixed)
+                print("Letters only please.")
                 continue
             try:
                 cost = input("How much?  (dollars and cents) ")
@@ -66,7 +65,7 @@ class Calculation:
                     break
                 cost = round(float(cost), 2)
             except ValueError:
-                print("Only numbers allowed, please enter expense again.")
+                print("Numbers only please.")
                 continue
             self.fixed_expenses[fixed] = cost
 
@@ -88,7 +87,7 @@ class Calculation:
                     break
                 cost = round(float(cost), 2)
             except ValueError:
-                print("Please enter expense again.")
+                print("Numbers only please.")
                 continue
             self.var_expenses[var] = cost
 
@@ -116,7 +115,8 @@ class Calculation:
         """
 
         if len(self.fixed_expenses) == 0 & len(self.var_expenses) == 0:
-            return 'Please run user_expenses() in Calculations class.'
+            return ('Please enter both your fixed and variable expenses to run' 
+                    + ' this program.')
         
         spend = ""
         fixed = sum(self.fixed_expenses.values())
@@ -137,26 +137,20 @@ class Calculation:
                     str(monthly_earn))
         return spend
 
-    def interest(self): 
-        """Calculates the amount of interest that will be accumulated on loans.
+    def input_info(self):
         
-        Side effects:
-            asks user for input, 
-            prints to the terminal,
-            writes the return result to the Word document
-
-        Returns:
-            (float): the total amount of interest due at the end of the
-            loan period.
-        """
-        interest_due = 'Total interest paid is $' + str(0.0)
+        info = {}
         
         while True:
+            skip = input("Type 'skip' to skip this step: ")
+            if skip == 'skip':
+                return info
+            else:
+                pass   
             try:
-                loan = input("Enter NAME of loan: ")
-                if loan == 'skip':
-                    return interest_due
-                if loan.isalpha():
+                n = input("Enter NAME of loan: ")
+                if n.isalpha():
+                    info[n] = 0
                     pass
                 else:
                     raise TypeError
@@ -165,97 +159,118 @@ class Calculation:
                 continue
             try:
                 p = input("Enter the PRINCIPAL (dollars and cents): ")
-                if p == 'skip':
-                    return interest_due
                 p = float(p)
+                info[p] = 0
             except ValueError:
-                print("Numbers only, please enter PRINCIPAL again.")
+                print("Numbers only please.")
                 continue
             try:
                 r = input("Enter the RATE (% per year): ")
-                if r == 'skip':
-                    return interest_due
                 r = float(r)
-                R = r/100
+                info[r] = 0
             except ValueError:
-                print("Numbers only, please enter RATE again.")
+                print("Numbers only please.")
                 continue
             try:
                 t = input("Enter the TIME (months): ")
-                if t == 'skip':
-                    return interest_due
-                t = float(t)
-                T = t/12
+                t = int(t)
+                info[t] = 0
             except ValueError:
-                print("Numbers only, please enter TIME again.")
+                print("Numbers only please.")
                 continue
             try:
                 int_type = input("Enter SIMPLE or COMPOUND: ")
-                if int_type == 'skip':
-                    return interest_due
-                if int_type.isalpha():
-                    pass
+                if int_type == 'SIMPLE':
+                    info[int_type] = 0
+                    return info
+                elif int_type == 'COMPOUND':
+                    info[int_type] = 0
+                    try:
+                        inp = input("Enter MONTHLY, QUARTERLY, or YEARLY: ")
+                        if (inp == "MONTHLY" or inp == "QUARTERLY" or 
+                            inp == "YEARLY"): 
+                            info[inp] = 0
+                            break
+                        else:
+                            raise TypeError
+                    except TypeError:
+                        print("Letters only please.")
+                        continue
                 else:
                     raise TypeError
             except TypeError:
-                print("Letters only, please enter information again.")
+                print("Enter SIMPLE or COMPOUND please.")
                 continue
-            if int_type == "SIMPLE":
-                #total_due = (p + (p * r * t))
-                interest_due = ('Loan: ' + str(loan) + ', ' + 
-                                 'Principal amount: ' + str(p) + 
-                                 ', ' + 'Rate: ' + str(r) + '%' + 
-                                 ', ' + 'Time: ' + str(t) + 
+
+        return info
+
+    def interest(self): 
+        """Calculates the amount of interest that will be accumulated on loans.
+        
+        Side effects:
+            prints to the terminal,
+            writes the return result to the Word document
+
+        Returns:
+            (float): the total amount of interest due at the end of the
+            loan period.
+        """
+        lst = []
+
+        for key, val in self.input_info().items():
+            lst.append(key)
+
+        if len(lst) == 0:
+            interest_due = "No information entered."
+            return interest_due
+        
+        R = lst[2]/100
+        T = lst[3]/12
+        
+        if "SIMPLE" in lst:
+            interest_due = ('Loan: ' + str(lst[0]) + ', ' + 
+                                 'Principal amount: $' + str(lst[1]) + 
+                                 ', ' + 'Rate: ' + str(lst[2]) + '%' + 
+                                 ', ' + 'Time: ' + str(lst[3]) + 
                                  ' months' + ', ' +
                                  'Simple Interest Loan' + ', ' + 
                                  'Total interest paid is $' + 
-                                 str(round((p * R * T), 2)))
-                return interest_due
-            elif int_type == "COMPOUND":
-                try:
-                    n = input("Enter MONTHLY, QUARTERLY, or YEARLY: ")
-                    if n.isalpha():
-                        if n == "MONTHLY":
-                            total_due = p * (1 + R/12)**(12*T)
-                            interest_due = ('Loan: ' + str(loan) + ', ' + 
-                                            'Principal amount: ' + str(p) + 
-                                            ', ' + 'Rate: ' + str(r) + '%' + 
-                                            ', ' + 'Time: ' + str(t) + 
-                                            ' months' + ', ' +
-                                            'Compounded: Monthly' + ', ' + 
-                                            'Total interest paid is $' + 
-                                            str(round(total_due - p, 2)))
-                            break
-                        elif n == "QUARTERLY":
-                            total_due = p * (1 + R/4)**(4*T)
-                            interest_due = ('Loan: ' + str(loan) + ', ' + 
-                                            'Principal amount: ' + str(p) + 
-                                            ', ' + 'Rate: ' + str(r) + '%' + 
-                                            ', ' + 'Time: ' + str(t) + 
-                                            ' months' + ', ' +
-                                            'Compounded: Quarterly' + ', ' + 
-                                            'Total interest paid is $' + 
-                                            str(round(total_due - p, 2)))
-                            break
-                        elif n == "YEARLY":
-                            total_due = p * (1 + R/1)**(1*T)
-                            interest_due = ('Loan: ' + str(loan) + ', ' + 
-                                            'Principal amount: ' + str(p) + 
-                                            ', ' + 'Rate: ' + str(r) + '%' + 
-                                            ', ' + 'Time: ' + str(t) + 
-                                            ' months' + ', ' +
-                                            'Compounded: Yearly' + ', ' + 
-                                            'Total interest paid is $' + 
-                                            str(round(total_due - p, 2)))
-                            break
-                        else:
-                            pass
-                    else:
-                        raise TypeError
-                except TypeError:
-                    print("Letters only please, please enter information ",
-                          "again.")
-                    continue
+                                 str(round((lst[1] * R * T), 2)))
+            
+        if "COMPOUND" and "MONTHLY" in lst:
+            total_due = lst[1] * (1 + R/12)**(12*T)
+            interest_due = ('Loan: ' + str(lst[0]) + ', ' + 
+                            'Principal amount: $' + str(lst[1]) + 
+                            ', ' + 'Rate: ' + str(lst[2]) + '%' + 
+                            ', ' + 'Time: ' + str(lst[3]) + 
+                            ' months' + ', ' +
+                            'Compounded: Monthly' + ', ' + 
+                            'Total interest paid is $' + 
+                            str(round(total_due - lst[1], 2)))
+        
+        if "COMPOUND" and "QUARTERLY" in lst:
+            total_due = lst[1] * (1 + R/4)**(4*T)
+            interest_due = ('Loan: ' + str(lst[0]) + ', ' + 
+                            'Principal amount: $' + str(lst[1]) + 
+                            ', ' + 'Rate: ' + str(lst[2]) + '%' + 
+                            ', ' + 'Time: ' + str(lst[3]) + 
+                            ' months' + ', ' +
+                            'Compounded: Quarterly' + ', ' + 
+                            'Total interest paid is $' + 
+                            str(round(total_due - lst[1], 2)))
+            
+        if "COMPOUND" and "YEARLY" in lst:
+            total_due = lst[1] * (1 + R/1)**(1*T)
+            interest_due = ('Loan: ' + str(lst[0]) + ', ' + 
+                            'Principal amount: $' + str(lst[1]) + 
+                            ', ' + 'Rate: ' + str(lst[2]) + '%' + 
+                            ', ' + 'Time: ' + str(lst[3]) + 
+                            ' months' + ', ' +
+                            'Compounded: Yearly' + ', ' + 
+                            'Total interest paid is $' + 
+                            str(round(total_due - lst[1], 2)))
+
+        print(interest_due)
         return interest_due
 
     def spending_allocation(self): 
@@ -270,7 +285,8 @@ class Calculation:
             (tuple): the percentage of income going towards each category.
         """
         if len(self.fixed_expenses) == 0 & len(self.var_expenses) == 0:
-            return 'Please run user_expenses() in Calculations class.'
+            return ('Please enter both your fixed and variable expenses to run' 
+                    + ' this program.')
         
         fixed = sum(self.fixed_expenses.values())
         var = sum(self.var_expenses.values())
@@ -307,8 +323,9 @@ class Graphs:
             bar plot:  displays users' expenses
         """
         if len(fixed) == 0 & len(var) == 0:
-            return 'Please run user_expenses() in Calculations class.'
-        
+            return ('Please enter both your fixed and variable expenses to run' 
+                    + ' this program.')
+
         for x in [fixed, var]:
             self.expense.update(x)
         keys = self.expense.keys()
@@ -321,23 +338,11 @@ class Graphs:
         ax.set_title("User Fixed and Variable Expenses")
         ax.set_xlabel("Expense Name")
         return plt.show()
-
-    def habits(self, income):
-        """  Provides a visual representation of how much money the user 
-        would save by cutting back on specific spending habits.
-        
-        Args:
-            income (float):  users total income (yearly amount)
-        
-        Side effects:
-            prints to the terminal, displays visual graphic
-        
-        Returns:
-            pie chart:  displays users' spending habits  
-        """
+    
+    def input_habits(self):
         
         habits = {}
-        
+
         while True:
             try:
                 habit = input("Enter NAME of habit (one word): ")
@@ -361,19 +366,37 @@ class Graphs:
             except ValueError:
                 print("Numbers only please.")
                 continue
-
+    
+        return habits
+        
+    def habits(self, income):
+        """  Provides a visual representation of how much money the user 
+        would save by cutting back on specific spending habits.
+        
+        Args:
+            income (float):  users total income (yearly amount)
+        
+        Side effects:
+            prints to the terminal, 
+            displays visual graphic,
+            writes to 'finances' document
+        
+        Returns:
+            pie chart:  displays users' spending habits  
+        """
+        
         hab = [] 
         total = []
         saving = 0.0
         lst = []
 
-        for k, v in habits.items():
+        for k, v in self.input_habits().items():
             hab.append(k)
             total.append(v)
             print('You are spending ' + str(v) + 
                   ' dollar(s) every month on ' + '[' + k + ']' + '.')
-            print('This means every year you are spending ' + str(v*12) + 
-                  ' dollar(s) on ' + '[' + k + ']' + '.')
+            print('This means every year you are spending ' + 
+                  str(round(v*12, 2)) + ' dollar(s) on ' + '[' + k + ']' + '.')
             print('[' + k + ']' + ' account(s) for ' + 
                   str(round(((v*12)/income)*100, 2)) + 
                   ' percent of your total income per year.\n')
@@ -384,10 +407,9 @@ class Graphs:
               ' dollar(s) a year on your habits.')
         
         for_doc = (lst)
-        
-        if len(habits) == 0:
+        if len(for_doc) == 0:
             for_doc = "No habits entered."
-
+        
         labels = hab
         sizes = total
         
@@ -415,6 +437,7 @@ def main(arglist):
     g = Graphs()
     
     d = Document()
+    
     d.add_heading("Three Blind Programmers Presents:  A Birds-eye-view" 
                   " of your finances", 0)
     d.add_paragraph('Yearly income: $' + str(c.total_income))
@@ -446,10 +469,10 @@ def main(arglist):
     print(c.spend_check())
     d.add_heading('Spending per month.', 1)
     d.add_paragraph(str(c.spend_check()))
-
+    
     d.add_heading('Loan information.', 1)
     d.add_paragraph(str(c.interest()))
-    
+
     print('Fixed/variable spending, respectively (percent of total income): ' 
           + str(c.spending_allocation()))
     d.add_heading('Monthly expenses against total income: $' + 
