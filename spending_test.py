@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import patch
-from test import Calculation, Graphs
+from spending import Calculation, Graphs
 
 import unittest
 import matplotlib
 from unittest.mock import patch
-from test import Calculation, Graphs
+from spending import Calculation, Graphs
 
 class TestSpending(unittest.TestCase):
     """ Test the Calculation and Graph methods."""
