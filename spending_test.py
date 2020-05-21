@@ -82,8 +82,12 @@ class TestGraphs(unittest.TestCase): #laraib
         #self.graph1 = Graphs({"maitre'd": 19200.00, "delivery driver": 24000.00}, {"cellphone": 1200.00, "gas bill": 720.00})
         #self.graph2 = Graphs({"cyber security consultant", 90000.00}, {"mortgage": 16800.00, "cellphone": 1440.00})
     
+    @patch("builtins.input", side_effect = [habit1, cost1, habit2, cost2, habit3,
+                                            cost3, habit4, cost4, habit5])
     def test_habits(self): 
-        
+        habits = input_habits()
+        self.assertEqual(habits, {"uber eats": 34.50, "online shopping": 50.00, 
+                                  "fast food": 25.60, "smoking": 14.00})
     
 if __name__ == '__main__':
     unittest.main()
