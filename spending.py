@@ -51,10 +51,10 @@ class Calculation:
         
         while True:
             try:
-                fixed = input("FIXED expenses, name? ")
+                fixed = input("FIXED expenses, name? (one word) ")
                 if fixed == 'done':
                     break
-                if fixed.isalpha():
+                if fixed.isalpha() or fixed == " ":
                     pass
                 else:
                     raise TypeError
@@ -160,7 +160,7 @@ class Calculation:
             else:
                 pass   
             try:
-                n = input("Enter NAME of loan: ")
+                n = input("Enter NAME of loan (one word): ")
                 if n.isalpha():
                     info[n] = 0
                     pass
@@ -395,7 +395,7 @@ class Graphs:
         
     def habits(self, income):
         """  Provides a visual representation of how much money the user 
-        would save by cutting back on specific spending habits.
+        is spending on their listed habits
         
         Args:
             income (float):  users total income (yearly amount)
